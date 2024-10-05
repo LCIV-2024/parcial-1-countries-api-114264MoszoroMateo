@@ -1,0 +1,7 @@
+services:
+  user:
+    container_name: country-parcial.app
+    image: country-parcial.app:1.0.0
+    build: .
+    ports:
+      - 8080:8080
