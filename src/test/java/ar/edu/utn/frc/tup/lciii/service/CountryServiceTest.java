@@ -3,6 +3,7 @@ package ar.edu.utn.frc.tup.lciii.service;
 import ar.edu.utn.frc.tup.lciii.dtos.common.CountryDTO;
 import ar.edu.utn.frc.tup.lciii.entities.CountryEntity;
 import ar.edu.utn.frc.tup.lciii.model.Country;
+import ar.edu.utn.frc.tup.lciii.model.CountryToSave;
 import ar.edu.utn.frc.tup.lciii.repository.CountryRepository;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
@@ -20,7 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class CountryServiceTest {
@@ -144,5 +146,18 @@ class CountryServiceTest {
 
     @Test
     void amountOfCountrySave() {
+        //given
+        CountryToSave number = new CountryToSave(3);
+        String url = "https://restcountries.com/v3.1/all";
+        List<Map<String, Object>> response = new ArrayList<>();
+        when(restTemplate.getForObject(url, List.class)).thenReturn(response);
+        when(countryService.getAllCountries()).thenReturn(countries);
+        //when
+        List<CountryDTO> respuesta = countryService.amountOfCountrySave(number.getAmountOfCountryToSave());
+
+        //then
+        assertEquals(countries.size(),respuesta.size());
+        verify(countryRepository,times(3)).save(any());
+
     }
 }
